@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/txtSelected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Выбранное устройство: не выбрано"
+        android:textSize="16sp"
+        android:paddingBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnEnableAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Включить Device Admin" />
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Запустить мониторинг"
+        android:layout_marginTop="8dp" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp" />
+</LinearLayout>
