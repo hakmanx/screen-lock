@@ -23,6 +23,7 @@ class BtMonitorService : Service() {
     private lateinit var prefs: SharedPreferences
     private lateinit var dpm: DevicePolicyManager
     private lateinit var adminComponent: ComponentName
+    private lateinit var notificationManager: NotificationManager
 
     private val handler = Handler(Looper.getMainLooper())
     private var pendingLockRunnable: Runnable? = null
@@ -36,25 +37,49 @@ class BtMonitorService : Service() {
                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 
             val targetMac = prefs.getString("target_mac", null) ?: return
-            if (device?.address != targetMac) return
+            val targetName = prefs.getString("target_name", "Unknown") ?: "Unknown"
+
+            updateNotification("Получено событие: $action")
+
+            if (device == null) {
+                updateNotification("Событие без устройства: $action")
+                return
+            }
+
+            updateNotification("Событие: $action / ${device.name ?: "Unknown"} / ${device.address}")
+
+            if (device.address != targetMac) {
+                updateNotification("Игнор: событие не от выбранного устройства ($targetName)")
+                return
+            }
 
             when (action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> {
                     pendingLockRunnable?.let { handler.removeCallbacks(it) }
                     pendingLockRunnable = null
+                    updateNotification("Выбранное устройство подключено: $targetName")
                 }
 
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
                     pendingLockRunnable?.let { handler.removeCallbacks(it) }
 
+                    updateNotification("Выбранное устройство отключено: $targetName. Блокировка через 5 сек")
+
                     val runnable = Runnable {
+                        updateNotification("Пытаюсь заблокировать экран: $targetName")
                         if (dpm.isAdminActive(adminComponent)) {
                             dpm.lockNow()
+                        } else {
+                            updateNotification("Ошибка: Device Admin не активен")
                         }
                     }
 
                     pendingLockRunnable = runnable
                     handler.postDelayed(runnable, 5000)
+                }
+
+                else -> {
+                    updateNotification("Другое событие выбранного устройства: $action")
                 }
             }
         }
@@ -66,17 +91,10 @@ class BtMonitorService : Service() {
         prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
         dpm = getSystemService(DevicePolicyManager::class.java)
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
+        notificationManager = getSystemService(NotificationManager::class.java)
 
         createChannel()
-
-        val notification: Notification = NotificationCompat.Builder(this, "bt_lock_channel")
-            .setContentTitle("Screen Lock BT")
-            .setContentText("Мониторинг Bluetooth-устройства активен")
-            .setSmallIcon(android.R.drawable.ic_lock_lock)
-            .setOngoing(true)
-            .build()
-
-        startForeground(1001, notification)
+        startForeground(1001, buildNotification("Мониторинг Bluetooth-устройства активен"))
 
         val filter = IntentFilter().apply {
             addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
@@ -84,6 +102,7 @@ class BtMonitorService : Service() {
         }
 
         registerReceiver(receiver, filter)
+        updateNotification("Сервис запущен")
     }
 
     override fun onDestroy() {
@@ -96,13 +115,26 @@ class BtMonitorService : Service() {
 
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager = getSystemService(NotificationManager::class.java)
             val channel = NotificationChannel(
                 "bt_lock_channel",
                 "Bluetooth monitor",
                 NotificationManager.IMPORTANCE_LOW
             )
-            manager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun buildNotification(text: String): Notification {
+        return NotificationCompat.Builder(this, "bt_lock_channel")
+            .setContentTitle("Screen Lock BT")
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setSmallIcon(android.R.drawable.ic_lock_lock)
+            .setOngoing(true)
+            .build()
+    }
+
+    private fun updateNotification(text: String) {
+        notificationManager.notify(1001, buildNotification(text))
     }
 }
