@@ -26,6 +26,20 @@
         android:text="Запустить мониторинг"
         android:layout_marginTop="8dp" />
 
+    <Button
+        android:id="@+id/btnExportLogs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Выгрузить логи"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnClearLogs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Очистить логи"
+        android:layout_marginTop="8dp" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
