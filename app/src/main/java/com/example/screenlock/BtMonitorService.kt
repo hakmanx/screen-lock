@@ -31,25 +31,37 @@ class BtMonitorService : Service() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
-            val action = intent.action ?: return
 
+            val action = intent.action ?: return
             val device: BluetoothDevice? =
                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 
-            val targetMac = prefs.getString("target_mac", null) ?: return
+            val targetMac = prefs.getString("target_mac", null) ?: run {
+                LogStore.append(this@BtMonitorService, "Событие $action проигнорировано: target_mac отсутствует")
+                return
+            }
+
             val targetName = prefs.getString("target_name", "Unknown") ?: "Unknown"
 
-            updateNotification("Получено событие: $action")
+            LogStore.append(
+                this@BtMonitorService,
+                "Получено событие: $action; device=${device?.name ?: "null"}; mac=${device?.address ?: "null"}"
+            )
+
+            updateNotification("Событие: $action")
 
             if (device == null) {
+                LogStore.append(this@BtMonitorService, "Событие $action без BluetoothDevice")
                 updateNotification("Событие без устройства: $action")
                 return
             }
 
-            updateNotification("Событие: $action / ${device.name ?: "Unknown"} / ${device.address}")
-
             if (device.address != targetMac) {
-                updateNotification("Игнор: событие не от выбранного устройства ($targetName)")
+                LogStore.append(
+                    this@BtMonitorService,
+                    "Игнор события: устройство не совпало. Выбрано=$targetName/$targetMac, пришло=${device.name ?: "Unknown"}/${device.address}"
+                )
+                updateNotification("Игнор: не выбранное устройство")
                 return
             }
 
@@ -57,20 +69,36 @@ class BtMonitorService : Service() {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> {
                     pendingLockRunnable?.let { handler.removeCallbacks(it) }
                     pendingLockRunnable = null
-                    updateNotification("Выбранное устройство подключено: $targetName")
+                    LogStore.append(this@BtMonitorService, "Выбранное устройство подключено: $targetName ($targetMac)")
+                    updateNotification("Подключено: $targetName")
                 }
 
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
                     pendingLockRunnable?.let { handler.removeCallbacks(it) }
-
-                    updateNotification("Выбранное устройство отключено: $targetName. Блокировка через 5 сек")
+                    LogStore.append(this@BtMonitorService, "Выбранное устройство отключено: $targetName ($targetMac)")
+                    updateNotification("Отключено: $targetName, блокировка через 5 сек")
 
                     val runnable = Runnable {
-                        updateNotification("Пытаюсь заблокировать экран: $targetName")
-                        if (dpm.isAdminActive(adminComponent)) {
-                            dpm.lockNow()
+                        val adminActive = dpm.isAdminActive(adminComponent)
+                        LogStore.append(
+                            this@BtMonitorService,
+                            "Попытка lockNow(); adminActive=$adminActive; target=$targetName ($targetMac)"
+                        )
+
+                        updateNotification("Пытаюсь заблокировать экран")
+
+                        if (adminActive) {
+                            try {
+                                dpm.lockNow()
+                                LogStore.append(this@BtMonitorService, "Вызов lockNow() выполнен")
+                                updateNotification("lockNow() вызван")
+                            } catch (e: Exception) {
+                                LogStore.append(this@BtMonitorService, "Ошибка lockNow(): ${e.javaClass.simpleName}: ${e.message}")
+                                updateNotification("Ошибка lockNow()")
+                            }
                         } else {
-                            updateNotification("Ошибка: Device Admin не активен")
+                            LogStore.append(this@BtMonitorService, "Device Admin не активен в момент блокировки")
+                            updateNotification("Device Admin не активен")
                         }
                     }
 
@@ -79,7 +107,8 @@ class BtMonitorService : Service() {
                 }
 
                 else -> {
-                    updateNotification("Другое событие выбранного устройства: $action")
+                    LogStore.append(this@BtMonitorService, "Иное событие выбранного устройства: $action")
+                    updateNotification("Другое событие: $action")
                 }
             }
         }
@@ -93,6 +122,7 @@ class BtMonitorService : Service() {
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
         notificationManager = getSystemService(NotificationManager::class.java)
 
+        LogStore.append(this, "BtMonitorService.onCreate()")
         createChannel()
         startForeground(1001, buildNotification("Мониторинг Bluetooth-устройства активен"))
 
@@ -102,12 +132,14 @@ class BtMonitorService : Service() {
         }
 
         registerReceiver(receiver, filter)
+        LogStore.append(this, "Receiver зарегистрирован на ACTION_ACL_CONNECTED/ACTION_ACL_DISCONNECTED")
         updateNotification("Сервис запущен")
     }
 
     override fun onDestroy() {
         pendingLockRunnable?.let { handler.removeCallbacks(it) }
         unregisterReceiver(receiver)
+        LogStore.append(this, "BtMonitorService.onDestroy()")
         super.onDestroy()
     }
 
