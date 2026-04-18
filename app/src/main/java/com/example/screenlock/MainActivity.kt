@@ -39,7 +39,11 @@ class MainActivity : AppCompatActivity() {
             if (granted) {
                 loadBondedDevices()
             } else {
-                Toast.makeText(this, "Нужно разрешение BLUETOOTH_CONNECT", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Нужно разрешение BLUETOOTH_CONNECT",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -73,10 +77,15 @@ class MainActivity : AppCompatActivity() {
                 .putString("target_name", device.name ?: "")
                 .apply()
 
-            LogStore.append(this, "Выбрано устройство: ${device.name ?: "Без имени"} ${device.address}")
+            LogStore.append(
+                this,
+                "Выбрано устройство: ${device.name ?: "Без имени"} ${device.address}"
+            )
+
             updateSelected()
             loadBondedDevices()
-            Toast.makeText(this, "Выбрано устройство", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this, "Устройство выбрано", Toast.LENGTH_SHORT).show()
         }
 
         checkPermissionAndLoad()
@@ -93,7 +102,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissionAndLoad() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
                 loadBondedDevices()
             } else {
                 permissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
@@ -120,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         val items = devices.map { device ->
             val name = displayName(device)
             if (device.address == selectedMac) {
-                "★ $name"
+                "✓  $name"
             } else {
                 name
             }
@@ -128,7 +139,8 @@ class MainActivity : AppCompatActivity() {
 
         listView.adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_list_item_1,
+            R.layout.item_device,
+            R.id.txtDeviceName,
             items
         )
     }
@@ -145,22 +157,29 @@ class MainActivity : AppCompatActivity() {
         txtSelected.text = when {
             name.isNotEmpty() -> name
             mac != null -> mac
-            else -> "Не выбрано"
+            else -> "Нет выбранного устройства"
         }
     }
 
     private fun toggleMonitoring() {
         val mac = prefs.getString("target_mac", null)
-
         if (mac == null) {
-            LogStore.append(this, "Переключение мониторинга отклонено: устройство не выбрано")
-            Toast.makeText(this, "Сначала выберите Bluetooth-устройство", Toast.LENGTH_LONG).show()
+            LogStore.append(this, "Включение защиты отклонено: устройство не выбрано")
+            Toast.makeText(
+                this,
+                "Сначала выберите Bluetooth-устройство",
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
 
         if (!dpm.isAdminActive(adminComponent)) {
-            LogStore.append(this, "Переключение мониторинга отклонено: Device Admin не активен")
-            Toast.makeText(this, "Сначала включите Device Admin в настройках", Toast.LENGTH_LONG).show()
+            LogStore.append(this, "Включение защиты отклонено: Device Admin не активен")
+            Toast.makeText(
+                this,
+                "Сначала включите Device Admin в настройках",
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
 
@@ -169,13 +188,13 @@ class MainActivity : AppCompatActivity() {
         if (enabled) {
             stopService(Intent(this, BtMonitorService::class.java))
             prefs.edit().putBoolean("monitoring_enabled", false).apply()
-            LogStore.append(this, "Мониторинг выключен пользователем")
-            Toast.makeText(this, "Мониторинг выключен", Toast.LENGTH_SHORT).show()
+            LogStore.append(this, "Защита выключена пользователем")
+            Toast.makeText(this, "Защита выключена", Toast.LENGTH_SHORT).show()
         } else {
             ContextCompat.startForegroundService(this, Intent(this, BtMonitorService::class.java))
             prefs.edit().putBoolean("monitoring_enabled", true).apply()
-            LogStore.append(this, "Мониторинг включен пользователем")
-            Toast.makeText(this, "Мониторинг включен", Toast.LENGTH_SHORT).show()
+            LogStore.append(this, "Защита включена пользователем")
+            Toast.makeText(this, "Защита включена", Toast.LENGTH_SHORT).show()
         }
 
         updateMonitoringUi()
@@ -185,13 +204,17 @@ class MainActivity : AppCompatActivity() {
         val enabled = prefs.getBoolean("monitoring_enabled", false)
 
         if (enabled) {
-            txtMonitorState.text = "Мониторинг включен"
-            txtMonitorState.setTextColor(0xFF63E283.toInt())
-            btnToggleMonitoring.text = "Выключить мониторинг"
+            txtMonitorState.text = "Защита активна"
+            txtMonitorState.setTextColor(
+                ContextCompat.getColor(this, R.color.guard_red_light)
+            )
+            btnToggleMonitoring.text = "Отключить защиту"
         } else {
-            txtMonitorState.text = "Мониторинг выключен"
-            txtMonitorState.setTextColor(0xFFFF6B6B.toInt())
-            btnToggleMonitoring.text = "Включить мониторинг"
+            txtMonitorState.text = "Защита неактивна"
+            txtMonitorState.setTextColor(
+                ContextCompat.getColor(this, R.color.guard_text_muted)
+            )
+            btnToggleMonitoring.text = "Включить защиту"
         }
     }
 }
