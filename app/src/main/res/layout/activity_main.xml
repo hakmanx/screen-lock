@@ -43,7 +43,8 @@
             android:layout_marginTop="18dp"
             android:background="@drawable/bg_guard_hero_card"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="22dp">
 
             <ImageView
                 android:layout_width="112dp"
@@ -109,10 +110,11 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txtDelaySummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Блокировка при разрыве • Задержка: 5 сек"
+                android:text="Блокировка при разрыве • Задержка: 0 сек"
                 android:textColor="@color/guard_text_secondary"
                 android:textSize="13sp" />
         </LinearLayout>
