@@ -33,21 +33,17 @@ class BtMonitorService : Service() {
             if (intent == null) return
 
             val action = intent.action ?: return
-            val device: BluetoothDevice? =
-                intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-
+            val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
             val targetMac = prefs.getString("target_mac", null) ?: run {
                 LogStore.append(this@BtMonitorService, "Событие $action проигнорировано: target_mac отсутствует")
                 return
             }
-
             val targetName = prefs.getString("target_name", "Unknown") ?: "Unknown"
 
             LogStore.append(
                 this@BtMonitorService,
                 "Получено событие: $action; device=${device?.name ?: "null"}; mac=${device?.address ?: "null"}"
             )
-
             updateNotification("Событие: $action")
 
             if (device == null) {
@@ -59,7 +55,7 @@ class BtMonitorService : Service() {
             if (device.address != targetMac) {
                 LogStore.append(
                     this@BtMonitorService,
-                    "Игнор события: устройство не совпало. Выбрано=$targetName/$targetMac, пришло=${device.name ?: "Unknown"}/${device.address}"
+                    "Игнор события: устройство не совпало.\nВыбрано=$targetName/$targetMac, пришло=${device.name ?: "Unknown"}/${device.address}"
                 )
                 updateNotification("Игнор: не выбранное устройство")
                 return
@@ -84,7 +80,6 @@ class BtMonitorService : Service() {
                             this@BtMonitorService,
                             "Попытка lockNow(); adminActive=$adminActive; target=$targetName ($targetMac)"
                         )
-
                         updateNotification("Пытаюсь заблокировать экран")
 
                         if (adminActive) {
@@ -93,7 +88,10 @@ class BtMonitorService : Service() {
                                 LogStore.append(this@BtMonitorService, "Срабатывание блокировки: lockNow() выполнен")
                                 updateNotification("Экран заблокирован")
                             } catch (e: Exception) {
-                                LogStore.append(this@BtMonitorService, "Ошибка lockNow(): ${e.javaClass.simpleName}: ${e.message}")
+                                LogStore.append(
+                                    this@BtMonitorService,
+                                    "Ошибка lockNow(): ${e.javaClass.simpleName}: ${e.message}"
+                                )
                                 updateNotification("Ошибка lockNow()")
                             }
                         } else {
@@ -152,7 +150,7 @@ class BtMonitorService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "bt_lock_channel",
-                "Bluetooth monitor",
+                "GuardLink Protection",
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(channel)
@@ -161,7 +159,7 @@ class BtMonitorService : Service() {
 
     private fun buildNotification(text: String): Notification {
         return NotificationCompat.Builder(this, "bt_lock_channel")
-            .setContentTitle("IronLink")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText(text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setSmallIcon(android.R.drawable.ic_lock_lock)
