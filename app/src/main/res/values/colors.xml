@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="guard_background">#070709</color>
+    <color name="guard_black">#07070A</color>
+    <color name="guard_black_soft">#111116</color>
     <color name="guard_surface">#16141A</color>
-    <color name="guard_surface_alt">#23171D</color>
-    <color name="guard_red">#B30F1D</color>
-    <color name="guard_red_light">#F0474A</color>
-    <color name="guard_red_dark">#6F0811</color>
-    <color name="guard_text_primary">#F7F2F4</color>
-    <color name="guard_text_secondary">#D9C9CD</color>
-    <color name="guard_text_muted">#A69399</color>
-    <color name="guard_stroke">#40F0474A</color>
-    <color name="guard_divider">#26FFFFFF</color>
+    <color name="guard_surface_2">#1E1A22</color>
+
+    <color name="guard_red">#FF3B30</color>
+    <color name="guard_red_deep">#C1121F</color>
+    <color name="guard_red_dark">#7A0C14</color>
+    <color name="guard_red_glow">#66FF3B30</color>
+
+    <color name="guard_text_primary">#F6F2F4</color>
+    <color name="guard_text_secondary">#BDB4BA</color>
+    <color name="guard_text_muted">#8F8790</color>
+
+    <color name="guard_stroke">#33FFFFFF</color>
+    <color name="guard_divider">#1FFFFFFF</color>
+
+    <color name="guard_success">#7ED957</color>
+    <color name="guard_warning">#FFB020</color>
+
+    <color name="ic_launcher_background">#07070A</color>
 </resources>
