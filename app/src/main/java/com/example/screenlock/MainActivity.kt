@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adminComponent: ComponentName
 
     private lateinit var listView: ListView
-    private lateinit var btnEnableAdmin: Button
     private lateinit var btnToggleMonitoring: Button
     private lateinit var btnOpenSettings: Button
     private lateinit var txtSelected: TextView
@@ -49,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         listView = findViewById(R.id.listView)
-        btnEnableAdmin = findViewById(R.id.btnEnableAdmin)
         btnToggleMonitoring = findViewById(R.id.btnToggleMonitoring)
         btnOpenSettings = findViewById(R.id.btnOpenSettings)
         txtSelected = findViewById(R.id.txtSelected)
@@ -59,20 +57,12 @@ class MainActivity : AppCompatActivity() {
         dpm = getSystemService(DevicePolicyManager::class.java)
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
 
-        btnEnableAdmin.setOnClickListener {
-            requestDeviceAdmin()
-        }
-
         btnToggleMonitoring.setOnClickListener {
             toggleMonitoring()
         }
 
         btnOpenSettings.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Экран настроек добавим следующим шагом",
-                Toast.LENGTH_SHORT
-            ).show()
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         listView.setOnItemClickListener { _, _, position, _ ->
@@ -159,18 +149,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestDeviceAdmin() {
-        LogStore.append(this, "Запрошено включение Device Admin")
-        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
-            putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
-            putExtra(
-                DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-                "Нужно для блокировки экрана при отключении выбранного Bluetooth-устройства"
-            )
-        }
-        startActivity(intent)
-    }
-
     private fun toggleMonitoring() {
         val mac = prefs.getString("target_mac", null)
 
@@ -182,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!dpm.isAdminActive(adminComponent)) {
             LogStore.append(this, "Переключение мониторинга отклонено: Device Admin не активен")
-            Toast.makeText(this, "Сначала включите Device Admin", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Сначала включите Device Admin в настройках", Toast.LENGTH_LONG).show()
             return
         }
 
