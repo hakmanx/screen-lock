@@ -54,23 +54,13 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnEnableAdmin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Включить Device Admin"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#8E2B2B" />
-
-    <Button
         android:id="@+id/btnToggleMonitoring"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Включить мониторинг"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#B63A3A"
-        android:layout_marginTop="10dp" />
+        android:backgroundTint="#B63A3A" />
 
     <Button
         android:id="@+id/btnOpenSettings"
