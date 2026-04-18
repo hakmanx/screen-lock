@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_guard_screen"
-    android:padding="20dp">
+    android:orientation="vertical"
+    android:paddingStart="18dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="18dp"
+    android:paddingBottom="14dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,165 +16,154 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_guardlink_logo" />
 
         <TextView
-            android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@string/app_name"
             android:textColor="@color/guard_text_primary"
-            android:textSize="30sp"
+            android:textSize="27sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        app:cardBackgroundColor="@color/guard_surface"
-        app:cardCornerRadius="28dp"
-        app:strokeColor="@color/guard_stroke"
-        app:strokeWidth="1dp">
+        android:background="@drawable/bg_guard_hero_card"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="118dp"
+            android:layout_height="118dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_guardlink_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Статус защиты"
+            android:textColor="@color/guard_text_secondary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txtMonitorState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Защита неактивна"
+            android:textColor="@color/guard_text_muted"
+            android:textSize="29sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="22dp">
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="Блокировка экрана при разрыве доверенного Bluetooth-соединения"
+            android:textColor="@color/guard_text_secondary"
+            android:textSize="14sp" />
 
-            <ImageView
-                android:layout_width="92dp"
-                android:layout_height="92dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_guardlink_logo" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="@color/guard_divider" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="Статус защиты"
-                android:textColor="@color/guard_text_secondary"
-                android:textSize="15sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Подключено к устройству"
+            android:textColor="@color/guard_text_muted"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/txtMonitorState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Защита неактивна"
-                android:textColor="@color/guard_text_muted"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/txtSelected"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_guard_button_secondary"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingHorizontal="16dp"
+            android:text="Нет выбранного устройства"
+            android:textColor="@color/guard_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="Блокировка экрана при разрыве доверенного Bluetooth-соединения"
-                android:textColor="@color/guard_text_secondary"
-                android:textSize="14sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Блокировка при разрыве • Задержка: 5 сек"
+            android:textColor="@color/guard_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/guard_divider" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Подключено к устройству"
-                android:textColor="@color/guard_text_muted"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/txtSelected"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Нет выбранного устройства"
-                android:textColor="@color/guard_text_primary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnToggleMonitoring"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="58dp"
         android:layout_marginTop="18dp"
+        android:background="@drawable/bg_guard_button_primary"
+        android:backgroundTint="@null"
         android:text="Включить защиту"
         android:textAllCaps="false"
         android:textColor="@color/guard_text_primary"
         android:textSize="16sp"
-        android:textStyle="bold"
-        app:backgroundTint="@color/guard_red_light"
-        app:cornerRadius="18dp" />
+        android:textStyle="bold" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnOpenSettings"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="58dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/bg_guard_button_secondary"
+        android:backgroundTint="@null"
         android:text="Правила и настройки"
         android:textAllCaps="false"
         android:textColor="@color/guard_text_primary"
         android:textSize="16sp"
-        app:backgroundTint="@color/guard_surface_alt"
-        app:cornerRadius="18dp"
-        app:strokeColor="@color/guard_stroke"
-        app:strokeWidth="1dp" />
+        android:textStyle="bold" />
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="18dp"
         android:layout_weight="1"
-        app:cardBackgroundColor="@color/guard_surface"
-        app:cardCornerRadius="26dp"
-        app:strokeColor="@color/guard_stroke"
-        app:strokeWidth="1dp">
+        android:background="@drawable/bg_guard_panel"
+        android:orientation="vertical"
+        android:padding="18dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="12dp">
+            android:layout_height="wrap_content"
+            android:text="Доступные устройства"
+            android:textColor="@color/guard_text_primary"
+            android:textSize="19sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="10dp"
-                android:text="Доступные устройства"
-                android:textColor="@color/guard_text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:cacheColorHint="@android:color/transparent"
-                android:clipToPadding="false"
-                android:divider="@color/guard_divider"
-                android:dividerHeight="1dp"
-                android:listSelector="@android:color/transparent" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="14dp"
+            android:layout_weight="1"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@color/guard_divider"
+            android:dividerHeight="1dp"
+            android:listSelector="@android:color/transparent" />
+    </LinearLayout>
 
 </LinearLayout>
