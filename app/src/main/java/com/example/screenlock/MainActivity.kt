@@ -3,12 +3,12 @@ package com.example.screenlock
 import android.Manifest
 import android.app.admin.DevicePolicyManager
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -19,8 +19,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,10 +28,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var listView: ListView
     private lateinit var btnEnableAdmin: Button
-    private lateinit var btnStart: Button
-    private lateinit var btnExportLogs: Button
-    private lateinit var btnClearLogs: Button
+    private lateinit var btnToggleMonitoring: Button
+    private lateinit var btnOpenSettings: Button
     private lateinit var txtSelected: TextView
+    private lateinit var txtMonitorState: TextView
+
+    private var currentDevices: List<BluetoothDevice> = emptyList()
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -50,10 +50,10 @@ class MainActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.listView)
         btnEnableAdmin = findViewById(R.id.btnEnableAdmin)
-        btnStart = findViewById(R.id.btnStart)
-        btnExportLogs = findViewById(R.id.btnExportLogs)
-        btnClearLogs = findViewById(R.id.btnClearLogs)
+        btnToggleMonitoring = findViewById(R.id.btnToggleMonitoring)
+        btnOpenSettings = findViewById(R.id.btnOpenSettings)
         txtSelected = findViewById(R.id.txtSelected)
+        txtMonitorState = findViewById(R.id.txtMonitorState)
 
         prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
         dpm = getSystemService(DevicePolicyManager::class.java)
@@ -63,20 +63,42 @@ class MainActivity : AppCompatActivity() {
             requestDeviceAdmin()
         }
 
-        btnStart.setOnClickListener {
-            startMonitorService()
+        btnToggleMonitoring.setOnClickListener {
+            toggleMonitoring()
         }
 
-        btnExportLogs.setOnClickListener {
-            exportLogs()
+        btnOpenSettings.setOnClickListener {
+            Toast.makeText(
+                this,
+                "Экран настроек добавим следующим шагом",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        btnClearLogs.setOnClickListener {
-            clearLogs()
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val device = currentDevices[position]
+
+            prefs.edit()
+                .putString("target_mac", device.address)
+                .putString("target_name", device.name ?: "")
+                .apply()
+
+            LogStore.append(this, "Выбрано устройство: ${device.name ?: "Без имени"} ${device.address}")
+            updateSelected()
+            loadBondedDevices()
+            Toast.makeText(this, "Выбрано устройство", Toast.LENGTH_SHORT).show()
         }
 
         checkPermissionAndLoad()
         updateSelected()
+        updateMonitoringUi()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateSelected()
+        updateMonitoringUi()
+        checkPermissionAndLoad()
     }
 
     private fun checkPermissionAndLoad() {
@@ -93,29 +115,48 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadBondedDevices() {
         val adapter = BluetoothAdapter.getDefaultAdapter()
-        val devices = adapter?.bondedDevices?.toList().orEmpty()
+        val selectedMac = prefs.getString("target_mac", null)
 
-        val items = devices.map { "${it.name ?: "Unknown"}\n${it.address}" }
+        val devices = adapter?.bondedDevices
+            ?.toList()
+            ?.sortedWith(
+                compareByDescending<BluetoothDevice> { it.address == selectedMac }
+                    .thenBy { displayName(it).lowercase() }
+            )
+            .orEmpty()
 
-        listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, items)
+        currentDevices = devices
 
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val device = devices[position]
-            prefs.edit()
-                .putString("target_mac", device.address)
-                .putString("target_name", device.name ?: "Unknown")
-                .apply()
-
-            updateSelected()
-            LogStore.append(this, "Выбрано устройство: ${device.name ?: "Unknown"} ${device.address}")
-            Toast.makeText(this, "Выбрано: ${device.name} ${device.address}", Toast.LENGTH_SHORT).show()
+        val items = devices.map { device ->
+            val name = displayName(device)
+            if (device.address == selectedMac) {
+                "★ $name"
+            } else {
+                name
+            }
         }
+
+        listView.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            items
+        )
+    }
+
+    private fun displayName(device: BluetoothDevice): String {
+        val name = device.name?.trim().orEmpty()
+        return if (name.isNotEmpty()) name else device.address
     }
 
     private fun updateSelected() {
-        val name = prefs.getString("target_name", "не выбрано")
-        val mac = prefs.getString("target_mac", "-")
-        txtSelected.text = "Выбранное устройство: $name ($mac)"
+        val name = prefs.getString("target_name", "")?.trim().orEmpty()
+        val mac = prefs.getString("target_mac", null)
+
+        txtSelected.text = when {
+            name.isNotEmpty() -> name
+            mac != null -> mac
+            else -> "Не выбрано"
+        }
     }
 
     private fun requestDeviceAdmin() {
@@ -130,50 +171,49 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun startMonitorService() {
+    private fun toggleMonitoring() {
         val mac = prefs.getString("target_mac", null)
 
         if (mac == null) {
-            LogStore.append(this, "Старт мониторинга отклонен: устройство не выбрано")
+            LogStore.append(this, "Переключение мониторинга отклонено: устройство не выбрано")
             Toast.makeText(this, "Сначала выберите Bluetooth-устройство", Toast.LENGTH_LONG).show()
             return
         }
 
         if (!dpm.isAdminActive(adminComponent)) {
-            LogStore.append(this, "Старт мониторинга отклонен: Device Admin не активен")
+            LogStore.append(this, "Переключение мониторинга отклонено: Device Admin не активен")
             Toast.makeText(this, "Сначала включите Device Admin", Toast.LENGTH_LONG).show()
             return
         }
 
-        LogStore.append(this, "Запуск мониторинга для ${prefs.getString("target_name", "Unknown")} ($mac)")
-        val intent = Intent(this, BtMonitorService::class.java)
-        ContextCompat.startForegroundService(this, intent)
-        Toast.makeText(this, "Мониторинг запущен", Toast.LENGTH_SHORT).show()
-    }
+        val enabled = prefs.getBoolean("monitoring_enabled", false)
 
-    private fun clearLogs() {
-        LogStore.clear(this)
-        Toast.makeText(this, "Логи очищены", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun exportLogs() {
-        val logs = LogStore.read(this)
-        val file = File(cacheDir, "screen_lock_logs.txt")
-        file.writeText(logs.ifBlank { "Логи пусты" })
-
-        val uri: Uri = FileProvider.getUriForFile(
-            this,
-            "${packageName}.fileprovider",
-            file
-        )
-
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_STREAM, uri)
-            putExtra(Intent.EXTRA_SUBJECT, "screen_lock_logs")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        if (enabled) {
+            stopService(Intent(this, BtMonitorService::class.java))
+            prefs.edit().putBoolean("monitoring_enabled", false).apply()
+            LogStore.append(this, "Мониторинг выключен пользователем")
+            Toast.makeText(this, "Мониторинг выключен", Toast.LENGTH_SHORT).show()
+        } else {
+            ContextCompat.startForegroundService(this, Intent(this, BtMonitorService::class.java))
+            prefs.edit().putBoolean("monitoring_enabled", true).apply()
+            LogStore.append(this, "Мониторинг включен пользователем")
+            Toast.makeText(this, "Мониторинг включен", Toast.LENGTH_SHORT).show()
         }
 
-        startActivity(Intent.createChooser(shareIntent, "Выгрузить логи"))
+        updateMonitoringUi()
+    }
+
+    private fun updateMonitoringUi() {
+        val enabled = prefs.getBoolean("monitoring_enabled", false)
+
+        if (enabled) {
+            txtMonitorState.text = "Мониторинг включен"
+            txtMonitorState.setTextColor(0xFF63E283.toInt())
+            btnToggleMonitoring.text = "Выключить мониторинг"
+        } else {
+            txtMonitorState.text = "Мониторинг выключен"
+            txtMonitorState.setTextColor(0xFFFF6B6B.toInt())
+            btnToggleMonitoring.text = "Включить мониторинг"
+        }
     }
 }
