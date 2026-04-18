@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnOpenSettings: Button
     private lateinit var txtSelected: TextView
     private lateinit var txtMonitorState: TextView
+    private lateinit var txtDelaySummary: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         btnOpenSettings = findViewById(R.id.btnOpenSettings)
         txtSelected = findViewById(R.id.txtSelected)
         txtMonitorState = findViewById(R.id.txtMonitorState)
+        txtDelaySummary = findViewById(R.id.txtDelaySummary)
 
         prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
         dpm = getSystemService(DevicePolicyManager::class.java)
@@ -61,12 +63,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateSelected()
+        updateDelaySummary()
         updateMonitoringUi()
     }
 
     override fun onResume() {
         super.onResume()
         updateSelected()
+        updateDelaySummary()
         updateMonitoringUi()
     }
 
@@ -79,6 +83,11 @@ class MainActivity : AppCompatActivity() {
             mac != null -> mac
             else -> "Нет выбранного устройства"
         }
+    }
+
+    private fun updateDelaySummary() {
+        val delay = prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300)
+        txtDelaySummary.text = "Блокировка при разрыве • Задержка: $delay сек"
     }
 
     private fun toggleMonitoring() {
