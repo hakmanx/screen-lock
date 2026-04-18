@@ -1,12 +1,17 @@
 package com.example.screenlock
 
+import android.app.AlertDialog
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.NumberPicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -14,10 +19,13 @@ import java.io.File
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var prefs: SharedPreferences
     private lateinit var btnBackSettings: ImageButton
     private lateinit var btnEnableAdmin: Button
+    private lateinit var btnSetLockDelay: Button
     private lateinit var btnExportLogs: Button
     private lateinit var btnClearLogs: Button
+    private lateinit var txtLockDelayValue: TextView
     private lateinit var dpm: DevicePolicyManager
     private lateinit var adminComponent: ComponentName
 
@@ -25,10 +33,14 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
+
         btnBackSettings = findViewById(R.id.btnBackSettings)
         btnEnableAdmin = findViewById(R.id.btnEnableAdmin)
+        btnSetLockDelay = findViewById(R.id.btnSetLockDelay)
         btnExportLogs = findViewById(R.id.btnExportLogs)
         btnClearLogs = findViewById(R.id.btnClearLogs)
+        txtLockDelayValue = findViewById(R.id.txtLockDelayValue)
 
         dpm = getSystemService(DevicePolicyManager::class.java)
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
@@ -51,6 +63,10 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btnSetLockDelay.setOnClickListener {
+            showDelayDialog()
+        }
+
         btnExportLogs.setOnClickListener {
             exportLogs()
         }
@@ -59,6 +75,41 @@ class SettingsActivity : AppCompatActivity() {
             LogStore.clear(this)
             Toast.makeText(this, "Журнал очищен", Toast.LENGTH_SHORT).show()
         }
+
+        updateDelaySummary()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateDelaySummary()
+    }
+
+    private fun updateDelaySummary() {
+        val delay = prefs.getInt("lock_delay_seconds", 0)
+        txtLockDelayValue.text = "Текущая задержка: $delay сек"
+    }
+
+    private fun showDelayDialog() {
+        val picker = NumberPicker(this).apply {
+            minValue = 0
+            maxValue = 300
+            value = prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300)
+            wrapSelectorWheel = false
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Задержка блокировки")
+            .setMessage("Выберите интервал от 0 до 300 секунд.")
+            .setView(picker)
+            .setPositiveButton("Сохранить") { _, _ ->
+                val value = picker.value.coerceIn(0, 300)
+                prefs.edit().putInt("lock_delay_seconds", value).apply()
+                LogStore.append(this, "Новая задержка блокировки: $value сек")
+                updateDelaySummary()
+                Toast.makeText(this, "Задержка сохранена: $value сек", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
     }
 
     private fun exportLogs() {
