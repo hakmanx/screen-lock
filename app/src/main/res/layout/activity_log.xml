@@ -31,43 +31,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:text="Журнал событий"
-            android:textColor="@color/guard_text_primary"
+            android:textColor="@color/guard_red_light"
             android:textSize="24sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="История блокировок, потери связи и системных действий."
+        android:textColor="@color/guard_text_secondary"
+        android:textSize="14sp" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:background="@drawable/bg_guard_panel"
-        android:orientation="vertical"
-        android:padding="18dp">
+        android:overScrollMode="ifContentScrolls">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/logContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="История защитных событий"
-            android:textColor="@color/guard_red_light"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="14dp"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/txtLogs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/guard_text_primary"
-                android:textIsSelectable="true"
-                android:textSize="15sp"
-                android:lineSpacingExtra="5dp" />
-        </ScrollView>
-    </LinearLayout>
+            android:orientation="vertical" />
+    </ScrollView>
 
 </LinearLayout>
