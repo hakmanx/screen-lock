@@ -7,66 +7,63 @@
 
     <!-- outer shield -->
     <path
-        android:fillColor="#070709"
-        android:pathData="M64,8 C46,8 31,12 21,19 L21,51 C21,81 39,104 64,118 C89,104 107,81 107,51 L107,19 C97,12 82,8 64,8 Z" />
+        android:fillColor="#09090B"
+        android:pathData="M64,8 C47,8 33,12 23,18 L23,50 C23,80 40,103 64,118 C88,103 105,80 105,50 L105,18 C95,12 81,8 64,8 Z" />
 
-    <!-- shield inner glow -->
+    <!-- shield shadow depth -->
     <path
-        android:fillColor="#1A0C11"
-        android:pathData="M64,14 C49,14 36,18 27,24 L27,50 C27,75 42,95 64,108 C86,95 101,75 101,50 L101,24 C92,18 79,14 64,14 Z" />
+        android:fillColor="#14070B"
+        android:pathData="M64,14 C50,14 38,18 30,23 L30,49 C30,73 44,93 64,105 C84,93 98,73 98,49 L98,23 C90,18 78,14 64,14 Z" />
 
-    <!-- inner red shield -->
+    <!-- red shield body -->
     <path
-        android:fillColor="#F1464E"
-        android:pathData="M64,20 C51,20 40,23 32,29 L32,49 C32,71 45,88 64,100 C83,88 96,71 96,49 L96,29 C88,23 77,20 64,20 Z" />
+        android:fillColor="#F0444F"
+        android:pathData="M64,20 C52,20 42,23 35,28 L35,48 C35,68 47,85 64,96 C81,85 93,68 93,48 L93,28 C86,23 76,20 64,20 Z" />
 
-    <!-- top highlight -->
+    <!-- top glass highlight -->
     <path
         android:fillColor="#33FFFFFF"
-        android:pathData="M39,30 C47,25 55,23 64,23 C73,23 81,25 89,30 C81,27 73,26 64,26 C55,26 47,27 39,30 Z" />
+        android:pathData="M43,29 C50,25.5 57,24 64,24 C71,24 78,25.5 85,29 C78,27 71,26 64,26 C57,26 50,27 43,29 Z" />
 
-    <!-- bluetooth vertical -->
+    <!-- bluetooth symbol -->
     <path
-        android:fillColor="#F6F1F3"
-        android:pathData="M61,34 H67 V80 H61 Z" />
-
-    <!-- bluetooth top left -->
-    <path
-        android:fillColor="#F6F1F3"
-        android:pathData="M64,52 L46,38 V47 L58,56 Z" />
-
-    <!-- bluetooth top right -->
-    <path
-        android:fillColor="#F6F1F3"
-        android:pathData="M64,52 L82,38 V47 L70,56 Z" />
-
-    <!-- bluetooth bottom left -->
-    <path
-        android:fillColor="#F6F1F3"
-        android:pathData="M64,58 L46,72 V63 L58,54 Z" />
-
-    <!-- bluetooth bottom right -->
-    <path
-        android:fillColor="#F6F1F3"
-        android:pathData="M64,58 L82,72 V63 L70,54 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#F8F4F5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="6"
+        android:pathData="M64,33 L64,77 M64,33 L81,49 L64,59 L81,71 M64,33 L47,49 L64,59 L47,71" />
 
     <!-- lock shackle -->
     <path
-        android:fillColor="#111114"
-        android:pathData="M49,74 V66 C49,56 55,49 64,49 C73,49 79,56 79,66 V74 H73 V67 C73,60 69,55 64,55 C59,55 55,60 55,67 V74 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#111216"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="8"
+        android:pathData="M51,79 V71 C51,62 57,56 64,56 C71,56 77,62 77,71 V79" />
+
+    <!-- lock shackle inner highlight -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#D9D5D8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="3"
+        android:pathData="M54,79 V72 C54,64.5 58,60 64,60 C70,60 74,64.5 74,72 V79" />
 
     <!-- lock body -->
     <path
-        android:fillColor="#A80714"
-        android:pathData="M42,72 H86 C91,72 94,75 94,80 V92 C94,97 91,100 86,100 H42 C37,100 34,97 34,92 V80 C34,75 37,72 42,72 Z" />
+        android:fillColor="#B10817"
+        android:pathData="M43,76 H85 C89,76 92,79 92,83 V94 C92,98 89,101 85,101 H43 C39,101 36,98 36,94 V83 C36,79 39,76 43,76 Z" />
 
-    <!-- lock body top glow -->
+    <!-- lock body highlight -->
     <path
         android:fillColor="#22FFFFFF"
-        android:pathData="M40,76 H88 C89.5,76 91,76.5 92,77.2 C90.6,75.4 88.5,74 86,74 H42 C39.5,74 37.4,75.4 36,77.2 C37,76.5 38.5,76 40,76 Z" />
+        android:pathData="M44,79 H84 C86.8,79 89.2,79.8 91,81.2 C89.6,78.8 87.5,77 85,77 H43 C40.5,77 38.4,78.8 37,81.2 C38.8,79.8 41.2,79 44,79 Z" />
 
     <!-- keyhole -->
     <path
-        android:fillColor="#12080A"
-        android:pathData="M61.8,85 C61.8,83.8 62.8,82.8 64,82.8 C65.2,82.8 66.2,83.8 66.2,85 C66.2,86 65.6,86.8 64.8,87.2 V91 H63.2 V87.2 C62.4,86.8 61.8,86 61.8,85 Z" />
+        android:fillColor="#14080A"
+        android:pathData="M61.5,87.5 C61.5,86.1 62.6,85 64,85 C65.4,85 66.5,86.1 66.5,87.5 C66.5,88.5 65.9,89.4 65,89.9 V94 H63 V89.9 C62.1,89.4 61.5,88.5 61.5,87.5 Z" />
 </vector>
