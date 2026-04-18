@@ -71,8 +71,19 @@ class BtMonitorService : Service() {
 
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
                     pendingLockRunnable?.let { handler.removeCallbacks(it) }
-                    LogStore.append(this@BtMonitorService, "Выбранное устройство отключено: $targetName ($targetMac)")
-                    updateNotification("Отключено: $targetName, блокировка через 5 сек")
+
+                    val delaySeconds = prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300)
+
+                    LogStore.append(
+                        this@BtMonitorService,
+                        "Выбранное устройство отключено: $targetName ($targetMac)"
+                    )
+
+                    if (delaySeconds == 0) {
+                        updateNotification("Отключено: $targetName, блокировка без задержки")
+                    } else {
+                        updateNotification("Отключено: $targetName, блокировка через $delaySeconds сек")
+                    }
 
                     val runnable = Runnable {
                         val adminActive = dpm.isAdminActive(adminComponent)
@@ -101,7 +112,12 @@ class BtMonitorService : Service() {
                     }
 
                     pendingLockRunnable = runnable
-                    handler.postDelayed(runnable, 5000)
+
+                    if (delaySeconds == 0) {
+                        runnable.run()
+                    } else {
+                        handler.postDelayed(runnable, delaySeconds * 1000L)
+                    }
                 }
 
                 else -> {
