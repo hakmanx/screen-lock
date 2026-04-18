@@ -1,64 +1,35 @@
-name: Build Android APK
+name: Build APK
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: current
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Prepare stable keystore
-        id: keystore
-        shell: bash
-        run: |
-          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
-            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$RUNNER_TEMP/guardlink-ci.jks"
-            echo "has_keystore=true" >> "$GITHUB_OUTPUT"
-            echo "keystore_path=$RUNNER_TEMP/guardlink-ci.jks" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_keystore=false" >> "$GITHUB_OUTPUT"
-            echo "keystore_path=" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Generate Gradle Wrapper
-        run: gradle wrapper
-
-      - name: Make gradlew executable
+      - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Clean project
+        run: ./gradlew clean
+
       - name: Build debug APK
-        env:
-          VERSION_CODE: ${{ github.run_number }}
-          ANDROID_KEYSTORE_PATH: ${{ steps.keystore.outputs.keystore_path }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: screen-lock-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
