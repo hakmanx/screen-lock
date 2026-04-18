@@ -90,8 +90,8 @@ class BtMonitorService : Service() {
                         if (adminActive) {
                             try {
                                 dpm.lockNow()
-                                LogStore.append(this@BtMonitorService, "Вызов lockNow() выполнен")
-                                updateNotification("lockNow() вызван")
+                                LogStore.append(this@BtMonitorService, "Срабатывание блокировки: lockNow() выполнен")
+                                updateNotification("Экран заблокирован")
                             } catch (e: Exception) {
                                 LogStore.append(this@BtMonitorService, "Ошибка lockNow(): ${e.javaClass.simpleName}: ${e.message}")
                                 updateNotification("Ошибка lockNow()")
@@ -122,6 +122,8 @@ class BtMonitorService : Service() {
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
         notificationManager = getSystemService(NotificationManager::class.java)
 
+        prefs.edit().putBoolean("monitoring_enabled", true).apply()
+
         LogStore.append(this, "BtMonitorService.onCreate()")
         createChannel()
         startForeground(1001, buildNotification("Мониторинг Bluetooth-устройства активен"))
@@ -139,6 +141,7 @@ class BtMonitorService : Service() {
     override fun onDestroy() {
         pendingLockRunnable?.let { handler.removeCallbacks(it) }
         unregisterReceiver(receiver)
+        prefs.edit().putBoolean("monitoring_enabled", false).apply()
         LogStore.append(this, "BtMonitorService.onDestroy()")
         super.onDestroy()
     }
@@ -158,7 +161,7 @@ class BtMonitorService : Service() {
 
     private fun buildNotification(text: String): Notification {
         return NotificationCompat.Builder(this, "bt_lock_channel")
-            .setContentTitle("Screen Lock BT")
+            .setContentTitle("IronLink")
             .setContentText(text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setSmallIcon(android.R.drawable.ic_lock_lock)
