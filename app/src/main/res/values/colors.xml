@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- base palette -->
     <color name="guard_black">#07070A</color>
     <color name="guard_black_soft">#111116</color>
     <color name="guard_surface">#16141A</color>
@@ -19,4 +20,9 @@
 
     <color name="guard_success">#7ED957</color>
     <color name="guard_warning">#FFB020</color>
+
+    <!-- compatibility names used by existing theme/layout files -->
+    <color name="guard_background">#07070A</color>
+    <color name="guard_red_light">#FF3B30</color>
+    <color name="guard_surface_alt">#1E1A22</color>
 </resources>
