@@ -15,9 +15,13 @@
 
     <application
         android:allowBackup="true"
-        android:label="Screen Lock BT"
+        android:label="IronLink"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScreenLock">
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
@@ -53,14 +57,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-<provider
-    android:name="androidx.core.content.FileProvider"
-    android:authorities="${applicationId}.fileprovider"
-    android:exported="false"
-    android:grantUriPermissions="true">
-    <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/file_paths" />
-</provider>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 </manifest>
