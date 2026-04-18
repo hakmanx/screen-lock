@@ -9,13 +9,16 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
+
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
 
     <application
         android:allowBackup="true"
-        android:label="IronLink"
+        android:icon="@drawable/ic_guardlink_logo"
+        android:roundIcon="@drawable/ic_guardlink_logo"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScreenLock">
 
@@ -39,6 +42,7 @@
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin_receiver" />
+
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
@@ -69,4 +73,5 @@
         </provider>
 
     </application>
+
 </manifest>
