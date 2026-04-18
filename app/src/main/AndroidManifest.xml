@@ -23,6 +23,14 @@
         android:theme="@style/Theme.ScreenLock">
 
         <activity
+            android:name=".LogActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DeviceListActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
 
