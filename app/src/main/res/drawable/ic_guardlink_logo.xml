@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="@color/guard_background"
+        android:pathData="M54,6 C38,6 25,10 16,15 L16,42 C16,70 31,91 54,102 C77,91 92,70 92,42 L92,15 C83,10 70,6 54,6 Z" />
+
+    <path
+        android:fillColor="@color/guard_red_light"
+        android:pathData="M54,16 C42,16 32,19 24,23 L24,42 C24,65 36,82 54,92 C72,82 84,65 84,42 L84,23 C76,19 66,16 54,16 Z" />
+
+    <path
+        android:fillColor="@color/guard_text_primary"
+        android:pathData="M51,26 H57 V82 H51 Z" />
+
+    <path
+        android:fillColor="@color/guard_text_primary"
+        android:pathData="M54,50 L39,38 V46 L51,54 Z" />
+
+    <path
+        android:fillColor="@color/guard_text_primary"
+        android:pathData="M54,50 L69,38 V46 L57,54 Z" />
+
+    <path
+        android:fillColor="@color/guard_text_primary"
+        android:pathData="M54,58 L39,70 V62 L51,54 Z" />
+
+    <path
+        android:fillColor="@color/guard_text_primary"
+        android:pathData="M54,58 L69,70 V62 L57,54 Z" />
+
+    <path
+        android:fillColor="@color/guard_red_dark"
+        android:pathData="M40,70 H68 C72,70 75,73 75,77 V88 C75,92 72,95 68,95 H40 C36,95 33,92 33,88 V77 C33,73 36,70 40,70 Z" />
+
+    <path
+        android:fillColor="@color/guard_text_primary"
+        android:pathData="M43,70 V63 C43,55 47,49 54,49 C61,49 65,55 65,63 V70 H59 V64 C59,59 57,55 54,55 C51,55 49,59 49,64 V70 Z" />
+
+    <path
+        android:fillColor="@color/guard_background"
+        android:pathData="M52,79 C52,77.9 52.9,77 54,77 C55.1,77 56,77.9 56,79 C56,79.9 55.4,80.7 54.6,80.9 V87 H53.4 V80.9 C52.6,80.7 52,79.9 52,79 Z" />
+
+</vector>
