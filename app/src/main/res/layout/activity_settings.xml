@@ -2,93 +2,179 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0B0B0F">
+    android:background="@drawable/bg_guard_screen"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/txtSettingsTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="IronLink — настройки"
-            android:textColor="#F3F3F3"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:paddingBottom="12dp" />
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#17171D"
-            android:padding="14dp"
-            android:layout_marginBottom="12dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnBackSettings"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_guard_button_secondary"
+                android:backgroundTint="@null"
+                android:contentDescription="Назад"
+                android:padding="10dp"
+                android:src="@drawable/ic_guard_back" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="14dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_guardlink_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Управление"
-                android:textColor="#FFFFFF"
+                android:layout_marginStart="12dp"
+                android:text="GuardLink"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Управление защитой"
+            android:textColor="@color/guard_text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Настройка прав, экспорт журнала и очистка локальных событий."
+            android:textColor="@color/guard_text_secondary"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_guard_panel"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Права администратора"
+                android:textColor="@color/guard_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Нужно для немедленной блокировки экрана при потере доверенного Bluetooth-соединения."
+                android:textColor="@color/guard_text_secondary"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/btnEnableAdmin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_guard_button_primary"
+                android:backgroundTint="@null"
                 android:text="Включить Device Admin"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#8E2B2B"
-                android:layout_marginTop="10dp" />
-
-            <Button
-                android:id="@+id/btnExportLogs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Выгрузить логи"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#B63A3A"
-                android:layout_marginTop="10dp" />
-
-            <Button
-                android:id="@+id/btnClearLogs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Очистить логи"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#2A2A33"
-                android:layout_marginTop="10dp" />
+                android:textColor="@color/guard_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_guard_panel"
             android:orientation="vertical"
-            android:background="#17171D"
-            android:padding="14dp">
+            android:padding="18dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Примечание"
-                android:textColor="#FFFFFF"
+                android:text="Журнал событий"
+                android:textColor="@color/guard_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Переключение режима полета, Wi-Fi и мобильных данных обычному приложению недоступно. Для этого нужны системные или корпоративные привилегии."
-                android:textColor="#C8C8CE"
-                android:textSize="14sp"
-                android:paddingTop="10dp" />
+                android:layout_marginTop="8dp"
+                android:text="Экспортируйте накопленные события для проверки или очистите журнал перед новым тестом."
+                android:textColor="@color/guard_text_secondary"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnExportLogs"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_guard_button_secondary"
+                android:backgroundTint="@null"
+                android:text="Выгрузить журнал"
+                android:textAllCaps="false"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnClearLogs"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_guard_button_danger"
+                android:backgroundTint="@null"
+                android:text="Очистить журнал"
+                android:textAllCaps="false"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_guard_panel"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Примечание"
+                android:textColor="@color/guard_red_light"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="GuardLink не управляет режимом полета, Wi-Fi и мобильными данными. Приложение только отслеживает доверенное Bluetooth-устройство и запускает блокировку экрана."
+                android:textColor="@color/guard_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
