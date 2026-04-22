@@ -5,78 +5,147 @@
     android:viewportWidth="128"
     android:viewportHeight="128">
 
-    <!-- outer massive shield -->
+    <!-- outer base shadow -->
     <path
         android:fillColor="#060608"
         android:pathData="M64,6
-                          C45,6 28,12 17,22
-                          L17,55
-                          C17,86 37,108 64,122
-                          C91,108 111,86 111,55
-                          L111,22
-                          C100,12 83,6 64,6 Z" />
+                          C47,6 31,11 20,20
+                          L20,56
+                          C20,86 39,108 64,122
+                          C89,108 108,86 108,56
+                          L108,20
+                          C97,11 81,6 64,6 Z" />
 
-    <!-- dark frame -->
+    <!-- outer bevel frame -->
     <path
-        android:fillColor="#14070B"
-        android:pathData="M64,12
-                          C48,12 34,17 25,25
-                          L25,54
-                          C25,80 42,99 64,112
-                          C86,99 103,80 103,54
-                          L103,25
-                          C94,17 80,12 64,12 Z" />
+        android:fillColor="#0F0A0D"
+        android:pathData="M64,10
+                          C49,10 36,14.5 27,22
+                          L27,55
+                          C27,81 43.5,100.5 64,113
+                          C84.5,100.5 101,81 101,55
+                          L101,22
+                          C92,14.5 79,10 64,10 Z" />
 
-    <!-- wide red body -->
+    <!-- dark side depth -->
     <path
-        android:fillColor="#E63A46"
-        android:pathData="M64,18
-                          C50,18 38,22 30,28
-                          L30,53
-                          C30,75 44,91 64,103
-                          C84,91 98,75 98,53
-                          L98,28
-                          C90,22 78,18 64,18 Z" />
+        android:fillColor="#17080C"
+        android:pathData="M64,14
+                          C51,14 39.5,18 32,24
+                          L32,55
+                          C32,78 46.5,95 64,106
+                          C81.5,95 96,78 96,55
+                          L96,24
+                          C88.5,18 77,14 64,14 Z" />
 
-    <!-- inner depth -->
+    <!-- main red shield body -->
     <path
-        android:fillColor="#B6111E"
-        android:fillAlpha="0.35"
-        android:pathData="M64,23
-                          C52,23 41.5,26.2 34.5,31.5
-                          L34.5,53
-                          C34.5,72.5 46.8,86.8 64,97
-                          C81.2,86.8 93.5,72.5 93.5,53
-                          L93.5,31.5
-                          C86.5,26.2 76,23 64,23 Z" />
+        android:fillColor="#E73B47"
+        android:pathData="M64,19
+                          C52.5,19 42.5,22.2 35.5,27.5
+                          L35.5,53.5
+                          C35.5,73.5 48,88.8 64,99
+                          C80,88.8 92.5,73.5 92.5,53.5
+                          L92.5,27.5
+                          C85.5,22.2 75.5,19 64,19 Z" />
+
+    <!-- darker lower body -->
+    <path
+        android:fillColor="#B91623"
+        android:fillAlpha="0.45"
+        android:pathData="M35.5,57
+                          C35.5,75.5 47.8,89.5 64,99
+                          C80.2,89.5 92.5,75.5 92.5,57
+                          L92.5,53.5
+                          C92.5,73.5 80,88.8 64,99
+                          C48,88.8 35.5,73.5 35.5,53.5 Z" />
+
+    <!-- inner ornamental border -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#8D0F1B"
+        android:strokeAlpha="0.65"
+        android:strokeWidth="2.2"
+        android:pathData="M64,24
+                          C54.2,24 45.6,26.8 39.6,31.2
+                          L39.6,52.6
+                          C39.6,69.8 50.5,83.5 64,92.2
+                          C77.5,83.5 88.4,69.8 88.4,52.6
+                          L88.4,31.2
+                          C82.4,26.8 73.8,24 64,24 Z" />
 
     <!-- top gloss -->
     <path
         android:fillColor="#36FFFFFF"
-        android:pathData="M40,29
-                          C47.2,25.9 55.4,24.4 64,24.4
-                          C72.6,24.4 80.8,25.9 88,29
-                          C80.6,27.3 72.6,26.5 64,26.5
-                          C55.4,26.5 47.4,27.3 40,29 Z" />
+        android:pathData="M43.5,29.2
+                          C49.8,26.3 56.8,24.9 64,24.9
+                          C71.2,24.9 78.2,26.3 84.5,29.2
+                          C77.7,27.4 70.9,26.5 64,26.5
+                          C57.1,26.5 50.3,27.4 43.5,29.2 Z" />
 
-    <!-- left soft gloss -->
+    <!-- upper glass arc -->
     <path
-        android:fillColor="#14FFFFFF"
-        android:pathData="M34,32
-                          C36.2,30.7 38.4,29.6 40.8,28.7
-                          C37.7,34.2 36,40.8 36,48.3
-                          L36,70
-                          C32.4,63.7 30,58.5 30,53
-                          L30,28
-                          C31.3,26.7 32.6,25.4 34,24.2 Z" />
+        android:fillColor="#24FFFFFF"
+        android:pathData="M45.5,33
+                          C51,30.8 57.4,29.7 64,29.7
+                          C70.6,29.7 77,30.8 82.5,33
+                          C77.1,32 70.9,31.5 64,31.5
+                          C57.1,31.5 50.9,32 45.5,33 Z" />
 
-    <!-- bottom point depth -->
+    <!-- left facet -->
     <path
-        android:fillColor="#08080A"
-        android:fillAlpha="0.35"
-        android:pathData="M51,98
-                          C55,100.7 59.3,102.9 64,104.9
-                          C68.7,102.9 73,100.7 77,98
-                          C73.6,102.4 69.2,106.2 64,110
-                          C58.8,106.2 54.4,102.4 51,98 Z" />
+        android:fillColor="#1FFFFFFF"
+        android:pathData="M41.5,33.2
+                          C44.5,31.4 47.7,30.1 51.4,29.1
+                          C47.8,35 45.9,42 45.9,49.9
+                          L45.9,76
+                          C41.8,69.6 39.6,61.6 39.6,52.6
+                          L39.6,31.2 Z" />
+
+    <!-- right facet shadow -->
+    <path
+        android:fillColor="#14000000"
+        android:pathData="M88.4,31.2
+                          L88.4,52.6
+                          C88.4,61.6 86.2,69.6 82.1,76
+                          L82.1,49.9
+                          C82.1,42 80.2,35 76.6,29.1
+                          C80.3,30.1 83.5,31.4 86.5,33.2 Z" />
+
+    <!-- center vertical ornament -->
+    <path
+        android:fillColor="#16FFFFFF"
+        android:pathData="M61.4,27.8
+                          L66.6,27.8
+                          L66.6,90.3
+                          C65.7,90.9 64.8,91.6 64,92.2
+                          C63.2,91.6 62.3,90.9 61.4,90.3 Z" />
+
+    <!-- center rib -->
+    <path
+        android:fillColor="#0E7A0E16"
+        android:pathData="M62.6,33
+                          L65.4,33
+                          L65.4,86.4
+                          C64.9,86.8 64.4,87.2 64,87.5
+                          C63.6,87.2 63.1,86.8 62.6,86.4 Z" />
+
+    <!-- lower reflection -->
+    <path
+        android:fillColor="#12FFFFFF"
+        android:pathData="M49,78
+                          C53.6,82.5 58.6,85.8 64,89
+                          C69.4,85.8 74.4,82.5 79,78
+                          C74.4,81 69.4,83.2 64,84.8
+                          C58.6,83.2 53.6,81 49,78 Z" />
+
+    <!-- bottom point shadow -->
+    <path
+        android:fillColor="#09090B"
+        android:fillAlpha="0.32"
+        android:pathData="M51.5,97
+                          C55.2,99.4 59.3,101.4 64,103.1
+                          C68.7,101.4 72.8,99.4 76.5,97
+                          C73.5,101.2 69.4,105 64,109
+                          C58.6,105 54.5,101.2 51.5,97 Z" />
 </vector>
