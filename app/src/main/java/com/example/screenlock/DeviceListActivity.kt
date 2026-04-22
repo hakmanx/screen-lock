@@ -4,6 +4,7 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
@@ -22,6 +23,10 @@ class DeviceListActivity : AppCompatActivity() {
     private lateinit var btnBackDevice: ImageButton
     private lateinit var txtCurrentDevice: TextView
     private lateinit var listViewDevices: ListView
+
+    private lateinit var navHome: TextView
+    private lateinit var navDevices: TextView
+    private lateinit var navJournal: TextView
 
     private var currentDevices: List<BluetoothDevice> = emptyList()
 
@@ -48,8 +53,28 @@ class DeviceListActivity : AppCompatActivity() {
         txtCurrentDevice = findViewById(R.id.txtCurrentDevice)
         listViewDevices = findViewById(R.id.listViewDevices)
 
+        navHome = findViewById(R.id.navHome)
+        navDevices = findViewById(R.id.navDevices)
+        navJournal = findViewById(R.id.navJournal)
+
         btnBackDevice.setOnClickListener {
             finish()
+        }
+
+        navHome.setOnClickListener {
+            startActivity(
+                Intent(this, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+            )
+        }
+
+        navDevices.setOnClickListener {
+            // уже на экране устройств
+        }
+
+        navJournal.setOnClickListener {
+            startActivity(Intent(this, LogActivity::class.java))
         }
 
         listViewDevices.setOnItemClickListener { _, _, position, _ ->
@@ -65,8 +90,9 @@ class DeviceListActivity : AppCompatActivity() {
                 "Выбрано устройство: ${device.name ?: "Без имени"} ${device.address}"
             )
 
+            updateCurrentDevice()
+            loadBondedDevices()
             Toast.makeText(this, "Устройство выбрано", Toast.LENGTH_SHORT).show()
-            finish()
         }
 
         updateCurrentDevice()
