@@ -20,25 +20,35 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var btnToggleMonitoring: Button
     private lateinit var btnChooseDevice: Button
-    private lateinit var btnOpenLogs: Button
     private lateinit var btnOpenSettings: Button
+
     private lateinit var txtSelected: TextView
     private lateinit var txtMonitorState: TextView
+    private lateinit var txtDelayValue: TextView
+
+    private lateinit var navHome: TextView
+    private lateinit var navDevices: TextView
+    private lateinit var navJournal: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnToggleMonitoring = findViewById(R.id.btnToggleMonitoring)
-        btnChooseDevice = findViewById(R.id.btnChooseDevice)
-        btnOpenLogs = findViewById(R.id.btnOpenLogs)
-        btnOpenSettings = findViewById(R.id.btnOpenSettings)
-        txtSelected = findViewById(R.id.txtSelected)
-        txtMonitorState = findViewById(R.id.txtMonitorState)
-
         prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
         dpm = getSystemService(DevicePolicyManager::class.java)
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
+
+        btnToggleMonitoring = findViewById(R.id.btnToggleMonitoring)
+        btnChooseDevice = findViewById(R.id.btnChooseDevice)
+        btnOpenSettings = findViewById(R.id.btnOpenSettings)
+
+        txtSelected = findViewById(R.id.txtSelected)
+        txtMonitorState = findViewById(R.id.txtMonitorState)
+        txtDelayValue = findViewById(R.id.txtDelayValue)
+
+        navHome = findViewById(R.id.navHome)
+        navDevices = findViewById(R.id.navDevices)
+        navJournal = findViewById(R.id.navJournal)
 
         btnToggleMonitoring.setOnClickListener {
             toggleMonitoring()
@@ -46,10 +56,6 @@ class MainActivity : AppCompatActivity() {
 
         btnChooseDevice.setOnClickListener {
             startActivity(Intent(this, DeviceListActivity::class.java))
-        }
-
-        btnOpenLogs.setOnClickListener {
-            startActivity(Intent(this, LogActivity::class.java))
         }
 
         btnOpenSettings.setOnClickListener {
@@ -60,13 +66,29 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, DeviceListActivity::class.java))
         }
 
-        updateSelected()
-        updateMonitoringUi()
+        navHome.setOnClickListener {
+            // уже на главной
+        }
+
+        navDevices.setOnClickListener {
+            startActivity(Intent(this, DeviceListActivity::class.java))
+        }
+
+        navJournal.setOnClickListener {
+            startActivity(Intent(this, LogActivity::class.java))
+        }
+
+        updateAllUi()
     }
 
     override fun onResume() {
         super.onResume()
+        updateAllUi()
+    }
+
+    private fun updateAllUi() {
         updateSelected()
+        updateDelayInfo()
         updateMonitoringUi()
     }
 
@@ -79,6 +101,11 @@ class MainActivity : AppCompatActivity() {
             mac != null -> mac
             else -> "Нет выбранного устройства"
         }
+    }
+
+    private fun updateDelayInfo() {
+        val delay = prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300)
+        txtDelayValue.text = "Задержка: $delay сек"
     }
 
     private fun toggleMonitoring() {
