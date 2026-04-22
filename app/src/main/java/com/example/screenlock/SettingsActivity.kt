@@ -8,9 +8,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -85,24 +87,38 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateDelaySummary() {
-        val delay = prefs.getInt("lock_delay_seconds", 0)
+        val delay = prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300)
         txtLockDelayValue.text = "Текущая задержка: $delay сек"
     }
 
     private fun showDelayDialog() {
-        val picker = NumberPicker(this).apply {
-            minValue = 0
-            maxValue = 300
-            value = prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300)
-            wrapSelectorWheel = false
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            setText(prefs.getInt("lock_delay_seconds", 0).coerceIn(0, 300).toString())
+            setSelection(text.length)
+            filters = arrayOf(InputFilter.LengthFilter(3))
+            hint = "0-300"
+            setPadding(40, 30, 40, 30)
         }
 
         AlertDialog.Builder(this)
             .setTitle("Задержка блокировки")
-            .setMessage("Выберите интервал от 0 до 300 секунд.")
-            .setView(picker)
+            .setMessage("Введите задержку в секундах от 0 до 300.")
+            .setView(input)
             .setPositiveButton("Сохранить") { _, _ ->
-                val value = picker.value.coerceIn(0, 300)
+                val rawValue = input.text?.toString()?.trim().orEmpty()
+
+                if (rawValue.isEmpty()) {
+                    Toast.makeText(this, "Введите число от 0 до 300", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                val value = rawValue.toIntOrNull()
+                if (value == null || value !in 0..300) {
+                    Toast.makeText(this, "Допустимо значение от 0 до 300", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
                 prefs.edit().putInt("lock_delay_seconds", value).apply()
                 LogStore.append(this, "Новая задержка блокировки: $value сек")
                 updateDelaySummary()
