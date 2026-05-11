@@ -2,65 +2,140 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#0B0B0F"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bluetooth-устройства"
-        android:textColor="#F3F3F3"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/txtDeviceSummary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Выберите одно или несколько Bluetooth-устройств."
-        android:textColor="#C8C8CE"
-        android:textSize="14sp"
-        android:paddingBottom="10dp" />
-
-    <ListView
-        android:id="@+id/listViewDevices"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:cacheColorHint="#00000000"
-        android:divider="#26262E"
-        android:dividerHeight="1dp" />
+        android:orientation="vertical"
+        android:padding="18dp">
 
-    <Button
-        android:id="@+id/btnSaveDevices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сохранить выбор"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#B63A3A"
-        android:layout_marginTop="12dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnClearDevices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Очистить выбор"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2A2A33"
-        android:layout_marginTop="8dp" />
+            <ImageButton
+                android:id="@+id/btnBackDevice"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="#25252D"
+                android:contentDescription="Назад"
+                android:padding="10dp"
+                android:src="@android:drawable/ic_media_previous" />
 
-    <Button
-        android:id="@+id/btnBackDevices"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="Доверенные устройства"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="#17171D"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сейчас выбрано"
+                android:textColor="#B8B8C0"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtCurrentDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Нет выбранных устройств"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:background="#17171D"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Нажмите на несколько устройств из списка"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/listViewDevices"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="14dp"
+                android:layout_weight="1"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="#303038"
+                android:dividerHeight="1dp"
+                android:listSelector="@android:color/transparent" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Назад"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2A2A33"
-        android:layout_marginTop="8dp" />
+        android:layout_height="74dp"
+        android:background="#17171D"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Главная"
+            android:textColor="#B8B8C0"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/navDevices"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Устройства"
+            android:textColor="#FF5A5A"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/navJournal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Журнал"
+            android:textColor="#B8B8C0"
+            android:textSize="15sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

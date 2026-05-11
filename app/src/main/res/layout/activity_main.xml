@@ -1,119 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0B0B0F"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/txtTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="IronLink"
-            android:textColor="#F3F3F3"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:paddingBottom="12dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/selectedCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#17171D"
-            android:padding="14dp"
-            android:layout_marginBottom="12dp">
+            android:padding="18dp">
 
             <TextView
-                android:id="@+id/txtSelectedLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Выбранные устройства"
-                android:textColor="#C8C8CE"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/txtSelected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Нет выбранных устройств"
+                android:text="@string/app_name"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingTop="6dp" />
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtMonitorState"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
                 android:text="Защита неактивна"
-                android:textColor="#FF6B6B"
-                android:textSize="14sp"
-                android:paddingTop="8dp" />
+                android:textColor="#B8B8C0"
+                android:textSize="26sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtDelayValue"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Задержка блокировки: 0 сек"
-                android:textColor="#C8C8CE"
-                android:textSize="14sp"
-                android:paddingTop="6dp" />
+                android:layout_marginTop="20dp"
+                android:background="#17171D"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Доверенные устройства"
+                    android:textColor="#B8B8C0"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtSelected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Нет выбранных устройств"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="#303038" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Блокировка экрана при разрыве"
+                    android:textColor="#B8B8C0"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtDelayValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Задержка: 0 сек"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnToggleMonitoring"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginTop="18dp"
+                android:text="Включить защиту"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnChooseDevice"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginTop="12dp"
+                android:text="Доверенные устройства"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnOpenSettings"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginTop="12dp"
+                android:text="Правила блокировки"
+                android:textAllCaps="false" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnToggleMonitoring"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Включить защиту"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#B63A3A" />
+    </ScrollView>
 
-        <Button
-            android:id="@+id/btnChooseDevice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Выбрать Bluetooth-устройства"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#2A2A33"
-            android:layout_marginTop="10dp" />
-
-        <Button
-            android:id="@+id/btnOpenJournal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Журнал"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#2A2A33"
-            android:layout_marginTop="10dp" />
-
-        <Button
-            android:id="@+id/btnOpenSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Настройки"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#2A2A33"
-            android:layout_marginTop="10dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="#17171D"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Блокировка сработает при отключении любого выбранного устройства."
-            android:textColor="#9A9AA2"
-            android:textSize="13sp"
-            android:paddingTop="18dp" />
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Главная"
+            android:textColor="#FF5A5A"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/navDevices"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Устройства"
+            android:textColor="#B8B8C0"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/navJournal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Журнал"
+            android:textColor="#B8B8C0"
+            android:textSize="15sp" />
 
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
