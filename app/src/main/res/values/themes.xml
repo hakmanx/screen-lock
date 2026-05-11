@@ -1,22 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
+<resources>
     <style name="Theme.ScreenLock" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/guard_red_light</item>
-        <item name="colorPrimaryVariant">@color/guard_red_dark</item>
-        <item name="colorSecondary">@color/guard_red</item>
-
-        <item name="colorSurface">@color/guard_surface</item>
-        <item name="colorOnSurface">@color/guard_text_primary</item>
-
-        <item name="colorOnBackground">@color/guard_text_primary</item>
-        <item name="android:colorBackground">@color/guard_background</item>
-
-        <item name="android:windowBackground">@color/guard_background</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/guard_background</item>
+        <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarColor">#0B0B0F</item>
+        <item name="android:statusBarColor">#0B0B0F</item>
+        <item name="colorPrimary">#B63A3A</item>
+        <item name="colorPrimaryVariant">#7E2424</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
     </style>
-
 </resources>

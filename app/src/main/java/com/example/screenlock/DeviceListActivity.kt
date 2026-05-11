@@ -3,9 +3,7 @@ package com.example.screenlock
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -18,12 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
 class DeviceListActivity : AppCompatActivity() {
-
-    private lateinit var prefs: SharedPreferences
     private lateinit var btnBackDevice: ImageButton
     private lateinit var txtCurrentDevice: TextView
     private lateinit var listViewDevices: ListView
-
     private lateinit var navHome: TextView
     private lateinit var navDevices: TextView
     private lateinit var navJournal: TextView
@@ -45,17 +40,19 @@ class DeviceListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_device_list)
 
-        prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
+        TrustedDevices.migrateLegacyIfNeeded(this)
 
         btnBackDevice = findViewById(R.id.btnBackDevice)
         txtCurrentDevice = findViewById(R.id.txtCurrentDevice)
         listViewDevices = findViewById(R.id.listViewDevices)
-
         navHome = findViewById(R.id.navHome)
         navDevices = findViewById(R.id.navDevices)
         navJournal = findViewById(R.id.navJournal)
+
+        listViewDevices.choiceMode = ListView.CHOICE_MODE_MULTIPLE
 
         btnBackDevice.setOnClickListener {
             finish()
@@ -70,7 +67,7 @@ class DeviceListActivity : AppCompatActivity() {
         }
 
         navDevices.setOnClickListener {
-            // уже на экране устройств
+            // Уже на экране устройств.
         }
 
         navJournal.setOnClickListener {
@@ -79,20 +76,33 @@ class DeviceListActivity : AppCompatActivity() {
 
         listViewDevices.setOnItemClickListener { _, _, position, _ ->
             val device = currentDevices[position]
+            val mac = TrustedDevices.safeAddress(device)
 
-            prefs.edit()
-                .putString("target_mac", device.address)
-                .putString("target_name", device.name ?: "")
-                .apply()
+            if (mac.isNullOrBlank()) {
+                Toast.makeText(this, "Не удалось получить MAC устройства", Toast.LENGTH_SHORT).show()
+                return@setOnItemClickListener
+            }
 
-            LogStore.append(
-                this,
-                "Выбрано устройство: ${device.name ?: "Без имени"} ${device.address}"
-            )
+            val selectedMacs = TrustedDevices.selectedMacs(this).toMutableSet()
+            val namesByMac = TrustedDevices.namesByMac(this).toMutableMap()
+            val title = TrustedDevices.displayNameSingleLine(device)
+
+            if (selectedMacs.contains(mac)) {
+                selectedMacs.remove(mac)
+                namesByMac.remove(mac)
+                LogStore.append(this, "Устройство удалено из доверенных: $title")
+                Toast.makeText(this, "Убрано из доверенных", Toast.LENGTH_SHORT).show()
+            } else {
+                selectedMacs.add(mac)
+                namesByMac[mac] = TrustedDevices.safeName(device).ifBlank { mac }
+                LogStore.append(this, "Устройство добавлено в доверенные: $title")
+                Toast.makeText(this, "Добавлено в доверенные", Toast.LENGTH_SHORT).show()
+            }
+
+            TrustedDevices.save(this, selectedMacs, namesByMac)
 
             updateCurrentDevice()
             loadBondedDevices()
-            Toast.makeText(this, "Устройство выбрано", Toast.LENGTH_SHORT).show()
         }
 
         updateCurrentDevice()
@@ -101,13 +111,17 @@ class DeviceListActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        TrustedDevices.migrateLegacyIfNeeded(this)
+
         updateCurrentDevice()
         checkPermissionAndLoad()
     }
 
     private fun checkPermissionAndLoad() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) ==
+            if (
+                checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
                 loadBondedDevices()
@@ -121,24 +135,35 @@ class DeviceListActivity : AppCompatActivity() {
 
     private fun loadBondedDevices() {
         val adapter = BluetoothAdapter.getDefaultAdapter()
-        val selectedMac = prefs.getString("target_mac", null)
+        val selectedMacs = TrustedDevices.selectedMacs(this)
 
-        val devices = adapter?.bondedDevices
-            ?.toList()
-            ?.sortedWith(
-                compareByDescending<BluetoothDevice> { it.address == selectedMac }
-                    .thenBy { displayName(it).lowercase() }
-            )
-            .orEmpty()
+        val devices = try {
+            adapter?.bondedDevices
+                ?.toList()
+                ?.sortedWith(
+                    compareByDescending<BluetoothDevice> {
+                        TrustedDevices.safeAddress(it) in selectedMacs
+                    }.thenBy {
+                        TrustedDevices.displayName(it).lowercase()
+                    }
+                )
+                .orEmpty()
+        } catch (e: SecurityException) {
+            LogStore.append(this, "Ошибка чтения Bluetooth-устройств: ${e.javaClass.simpleName}: ${e.message}")
+            Toast.makeText(this, "Нет доступа к Bluetooth-устройствам", Toast.LENGTH_LONG).show()
+            emptyList()
+        }
 
         currentDevices = devices
 
         val items = devices.map { device ->
-            val name = displayName(device)
-            if (device.address == selectedMac) {
-                "✓  $name"
+            val mac = TrustedDevices.safeAddress(device)
+            val name = TrustedDevices.displayName(device)
+
+            if (mac != null && mac in selectedMacs) {
+                "☑ $name"
             } else {
-                name
+                "☐ $name"
             }
         }
 
@@ -148,21 +173,25 @@ class DeviceListActivity : AppCompatActivity() {
             R.id.txtDeviceName,
             items
         )
-    }
 
-    private fun updateCurrentDevice() {
-        val name = prefs.getString("target_name", "")?.trim().orEmpty()
-        val mac = prefs.getString("target_mac", null)
+        devices.forEachIndexed { index, device ->
+            val mac = TrustedDevices.safeAddress(device)
+            listViewDevices.setItemChecked(index, mac != null && mac in selectedMacs)
+        }
 
-        txtCurrentDevice.text = when {
-            name.isNotEmpty() -> name
-            mac != null -> mac
-            else -> "Нет выбранного устройства"
+        if (devices.isEmpty()) {
+            Toast.makeText(this, "Сопряжённых Bluetooth-устройств не найдено", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun displayName(device: BluetoothDevice): String {
-        val name = device.name?.trim().orEmpty()
-        return if (name.isNotEmpty()) name else device.address
+    private fun updateCurrentDevice() {
+        val count = TrustedDevices.selectedMacs(this).size
+
+        txtCurrentDevice.text = when (count) {
+            0 -> "Нет выбранных устройств"
+            1 -> "Выбрано 1 устройство:\n${TrustedDevices.summary(this)}"
+            in 2..4 -> "Выбрано $count устройства:\n${TrustedDevices.summary(this)}"
+            else -> "Выбрано $count устройств:\n${TrustedDevices.summary(this)}"
+        }
     }
 }

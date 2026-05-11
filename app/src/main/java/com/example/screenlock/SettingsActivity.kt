@@ -12,7 +12,6 @@ import android.text.InputFilter
 import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,22 +19,24 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 class SettingsActivity : AppCompatActivity() {
-
     private lateinit var prefs: SharedPreferences
-    private lateinit var btnBackSettings: ImageButton
+
+    private lateinit var btnBackSettings: Button
     private lateinit var btnEnableAdmin: Button
     private lateinit var btnSetLockDelay: Button
     private lateinit var btnExportLogs: Button
     private lateinit var btnClearLogs: Button
     private lateinit var txtLockDelayValue: TextView
+
     private lateinit var dpm: DevicePolicyManager
     private lateinit var adminComponent: ComponentName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_settings)
 
-        prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(TrustedDevices.PREFS_NAME, Context.MODE_PRIVATE)
 
         btnBackSettings = findViewById(R.id.btnBackSettings)
         btnEnableAdmin = findViewById(R.id.btnEnableAdmin)
@@ -47,32 +48,24 @@ class SettingsActivity : AppCompatActivity() {
         dpm = getSystemService(DevicePolicyManager::class.java)
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
 
-        btnBackSettings.setOnClickListener {
-            finish()
-        }
+        btnBackSettings.setOnClickListener { finish() }
 
         btnEnableAdmin.setOnClickListener {
-            LogStore.append(this, "Запрошено включение Device Admin из GuardLink SettingsActivity")
+            LogStore.append(this, "Запрошено включение Device Admin из SettingsActivity")
 
             val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
                 putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
                 putExtra(
                     DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-                    "GuardLink использует это разрешение для блокировки экрана при потере доверенного Bluetooth-устройства"
+                    "IronLink использует это разрешение для блокировки экрана при потере выбранного Bluetooth-устройства."
                 )
             }
 
             startActivity(intent)
         }
 
-        btnSetLockDelay.setOnClickListener {
-            showDelayDialog()
-        }
-
-        btnExportLogs.setOnClickListener {
-            exportLogs()
-        }
-
+        btnSetLockDelay.setOnClickListener { showDelayDialog() }
+        btnExportLogs.setOnClickListener { exportLogs() }
         btnClearLogs.setOnClickListener {
             LogStore.clear(this)
             Toast.makeText(this, "Журнал очищен", Toast.LENGTH_SHORT).show()
@@ -107,13 +100,8 @@ class SettingsActivity : AppCompatActivity() {
             .setView(input)
             .setPositiveButton("Сохранить") { _, _ ->
                 val rawValue = input.text?.toString()?.trim().orEmpty()
-
-                if (rawValue.isEmpty()) {
-                    Toast.makeText(this, "Введите число от 0 до 300", Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-
                 val value = rawValue.toIntOrNull()
+
                 if (value == null || value !in 0..300) {
                     Toast.makeText(this, "Допустимо значение от 0 до 300", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -130,8 +118,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun exportLogs() {
         val logs = LogStore.read(this)
-        val file = File(cacheDir, "guardlink_logs.txt")
-        file.writeText(logs.ifBlank { "Журнал GuardLink пуст" })
+        val file = File(cacheDir, "ironlink_logs.txt")
+        file.writeText(logs.ifBlank { "Журнал IronLink пуст" })
 
         val uri: Uri = FileProvider.getUriForFile(
             this,
@@ -142,7 +130,7 @@ class SettingsActivity : AppCompatActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_STREAM, uri)
-            putExtra(Intent.EXTRA_SUBJECT, "guardlink_logs")
+            putExtra(Intent.EXTRA_SUBJECT, "ironlink_logs")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 

@@ -7,15 +7,25 @@ import androidx.core.content.ContextCompat
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            val prefs = context.getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
-            val mac = prefs.getString("target_mac", null)
-            if (mac != null) {
-                ContextCompat.startForegroundService(
-                    context,
-                    Intent(context, BtMonitorService::class.java)
-                )
-            }
+        if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
+
+        TrustedDevices.migrateLegacyIfNeeded(context)
+
+        if (TrustedDevices.hasSelection(context)) {
+            LogStore.append(
+                context,
+                "Телефон загружен: запускаю мониторинг доверенных Bluetooth-устройств"
+            )
+
+            ContextCompat.startForegroundService(
+                context,
+                Intent(context, BtMonitorService::class.java)
+            )
+        } else {
+            LogStore.append(
+                context,
+                "Телефон загружен: мониторинг не запущен, доверенные устройства не выбраны"
+            )
         }
     }
 }

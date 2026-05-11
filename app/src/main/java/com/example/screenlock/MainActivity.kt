@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var prefs: SharedPreferences
     private lateinit var dpm: DevicePolicyManager
     private lateinit var adminComponent: ComponentName
@@ -21,31 +20,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnToggleMonitoring: Button
     private lateinit var btnChooseDevice: Button
     private lateinit var btnOpenSettings: Button
-
     private lateinit var txtSelected: TextView
     private lateinit var txtMonitorState: TextView
     private lateinit var txtDelayValue: TextView
-
     private lateinit var navHome: TextView
     private lateinit var navDevices: TextView
     private lateinit var navJournal: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
-        prefs = getSharedPreferences("bt_lock_prefs", Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(TrustedDevices.PREFS_NAME, Context.MODE_PRIVATE)
+        TrustedDevices.migrateLegacyIfNeeded(this)
+
         dpm = getSystemService(DevicePolicyManager::class.java)
         adminComponent = ComponentName(this, LockAdminReceiver::class.java)
 
         btnToggleMonitoring = findViewById(R.id.btnToggleMonitoring)
         btnChooseDevice = findViewById(R.id.btnChooseDevice)
         btnOpenSettings = findViewById(R.id.btnOpenSettings)
-
         txtSelected = findViewById(R.id.txtSelected)
         txtMonitorState = findViewById(R.id.txtMonitorState)
         txtDelayValue = findViewById(R.id.txtDelayValue)
-
         navHome = findViewById(R.id.navHome)
         navDevices = findViewById(R.id.navDevices)
         navJournal = findViewById(R.id.navJournal)
@@ -67,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         navHome.setOnClickListener {
-            // уже на главной
+            // Уже на главной.
         }
 
         navDevices.setOnClickListener {
@@ -83,6 +81,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        TrustedDevices.migrateLegacyIfNeeded(this)
+
         updateAllUi()
     }
 
@@ -93,13 +94,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateSelected() {
-        val name = prefs.getString("target_name", "")?.trim().orEmpty()
-        val mac = prefs.getString("target_mac", null)
+        val count = TrustedDevices.selectedMacs(this).size
 
-        txtSelected.text = when {
-            name.isNotEmpty() -> name
-            mac != null -> mac
-            else -> "Нет выбранного устройства"
+        txtSelected.text = when (count) {
+            0 -> "Нет выбранных устройств"
+            1 -> "Выбрано 1 устройство:\n${TrustedDevices.summary(this)}"
+            in 2..4 -> "Выбрано $count устройства:\n${TrustedDevices.summary(this)}"
+            else -> "Выбрано $count устройств:\n${TrustedDevices.summary(this)}"
         }
     }
 
@@ -109,24 +110,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleMonitoring() {
-        val mac = prefs.getString("target_mac", null)
-        if (mac == null) {
-            LogStore.append(this, "Включение защиты отклонено: устройство не выбрано")
+        if (!TrustedDevices.hasSelection(this)) {
+            LogStore.append(this, "Включение защиты отклонено: доверенные устройства не выбраны")
+
             Toast.makeText(
                 this,
-                "Сначала выберите Bluetooth-устройство",
+                "Сначала выберите одно или несколько Bluetooth-устройств",
                 Toast.LENGTH_LONG
             ).show()
+
             return
         }
 
         if (!dpm.isAdminActive(adminComponent)) {
             LogStore.append(this, "Включение защиты отклонено: Device Admin не активен")
+
             Toast.makeText(
                 this,
                 "Сначала включите Device Admin в настройках",
                 Toast.LENGTH_LONG
             ).show()
+
             return
         }
 
@@ -135,11 +139,13 @@ class MainActivity : AppCompatActivity() {
         if (enabled) {
             stopService(Intent(this, BtMonitorService::class.java))
             prefs.edit().putBoolean("monitoring_enabled", false).apply()
+
             LogStore.append(this, "Защита выключена пользователем")
             Toast.makeText(this, "Защита выключена", Toast.LENGTH_SHORT).show()
         } else {
             ContextCompat.startForegroundService(this, Intent(this, BtMonitorService::class.java))
             prefs.edit().putBoolean("monitoring_enabled", true).apply()
+
             LogStore.append(this, "Защита включена пользователем")
             Toast.makeText(this, "Защита включена", Toast.LENGTH_SHORT).show()
         }
