@@ -1,39 +1,48 @@
 package com.example.screenlock
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class LogActivity : AppCompatActivity() {
+    private lateinit var btnBackLogs: ImageButton
     private lateinit var txtLogs: TextView
-    private lateinit var btnBackLog: Button
-    private lateinit var btnCopyLogs: Button
-    private lateinit var btnClearLogsScreen: Button
+    private lateinit var navHome: TextView
+    private lateinit var navDevices: TextView
+    private lateinit var navJournal: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_log)
 
+        btnBackLogs = findViewById(R.id.btnBackLogs)
         txtLogs = findViewById(R.id.txtLogs)
-        btnBackLog = findViewById(R.id.btnBackLog)
-        btnCopyLogs = findViewById(R.id.btnCopyLogs)
-        btnClearLogsScreen = findViewById(R.id.btnClearLogsScreen)
+        navHome = findViewById(R.id.navHome)
+        navDevices = findViewById(R.id.navDevices)
+        navJournal = findViewById(R.id.navJournal)
 
-        btnBackLog.setOnClickListener { finish() }
-        btnCopyLogs.setOnClickListener { copyLogs() }
-        btnClearLogsScreen.setOnClickListener {
-            LogStore.clear(this)
-            refreshLogs()
-            Toast.makeText(this, "Журнал очищен", Toast.LENGTH_SHORT).show()
+        btnBackLogs.setOnClickListener {
+            finish()
         }
 
-        refreshLogs()
+        navHome.setOnClickListener {
+            startActivity(
+                Intent(this, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+            )
+        }
+
+        navDevices.setOnClickListener {
+            startActivity(Intent(this, DeviceListActivity::class.java))
+        }
+
+        navJournal.setOnClickListener {
+            // Уже на экране журнала.
+        }
     }
 
     override fun onResume() {
@@ -43,13 +52,6 @@ class LogActivity : AppCompatActivity() {
 
     private fun refreshLogs() {
         val logs = LogStore.read(this)
-        txtLogs.text = logs.ifBlank { "Журнал пуст" }
-    }
-
-    private fun copyLogs() {
-        val logs = LogStore.read(this)
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(ClipData.newPlainText("IronLink logs", logs))
-        Toast.makeText(this, "Журнал скопирован", Toast.LENGTH_SHORT).show()
+        txtLogs.text = logs.ifBlank { "Событий пока нет." }
     }
 }
