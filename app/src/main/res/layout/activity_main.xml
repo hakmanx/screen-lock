@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0B0B0F"
+    android:background="@drawable/bg_guard_screen"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <ScrollView
@@ -15,40 +16,70 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="18dp">
+            android:paddingStart="18dp"
+            android:paddingTop="28dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="18dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="#FFFFFF"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtMonitorState"
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_guardlink_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/app_name"
+                    android:textColor="@color/guard_text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:text="Защита неактивна"
-                android:textColor="#B8B8C0"
-                android:textSize="26sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="22dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_guardlink_logo" />
+
+                <TextView
+                    android:id="@+id/txtMonitorState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Защита неактивна"
+                    android:textColor="@color/guard_text_muted"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="#17171D"
+                android:background="@drawable/bg_guard_panel"
                 android:orientation="vertical"
                 android:padding="18dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Доверенные устройства"
-                    android:textColor="#B8B8C0"
+                    android:text="Подключено к доверенному устройству"
+                    android:textColor="@color/guard_text_secondary"
                     android:textSize="14sp" />
 
                 <TextView
@@ -56,9 +87,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Нет выбранных устройств"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Нет выбранного устройства"
+                    android:textColor="@color/guard_text_primary"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <View
@@ -66,13 +99,13 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="#303038" />
+                    android:background="@color/guard_divider" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Блокировка экрана при разрыве"
-                    android:textColor="#B8B8C0"
+                    android:textColor="@color/guard_text_secondary"
                     android:textSize="14sp" />
 
                 <TextView
@@ -81,10 +114,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="Задержка: 0 сек"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/guard_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
             <Button
@@ -92,36 +124,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="18dp"
+                android:background="@drawable/bg_guard_button_primary"
+                android:backgroundTint="@null"
                 android:text="Включить защиту"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnChooseDevice"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="12dp"
-                android:text="Доверенные устройства"
-                android:textAllCaps="false" />
+                android:background="@drawable/bg_guard_button_primary"
+                android:backgroundTint="@null"
+                android:text="Доверенное устройство"
+                android:textAllCaps="false"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnOpenSettings"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="12dp"
+                android:background="@drawable/bg_guard_button_primary"
+                android:backgroundTint="@null"
                 android:text="Правила блокировки"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="18dp" />
         </LinearLayout>
-
     </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="74dp"
-        android:background="#17171D"
+        android:background="@drawable/bg_guard_panel"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/navHome"
@@ -130,7 +182,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Главная"
-            android:textColor="#FF5A5A"
+            android:textColor="@color/guard_red_light"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -141,7 +193,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Устройства"
-            android:textColor="#B8B8C0"
+            android:textColor="@color/guard_text_secondary"
             android:textSize="15sp" />
 
         <TextView
@@ -151,9 +203,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Журнал"
-            android:textColor="#B8B8C0"
+            android:textColor="@color/guard_text_secondary"
             android:textSize="15sp" />
-
     </LinearLayout>
 
 </LinearLayout>

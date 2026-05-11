@@ -2,65 +2,122 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#0B0B0F"
-    android:padding="16dp">
+    android:background="@drawable/bg_guard_screen"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Журнал"
-        android:textColor="#F3F3F3"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:paddingBottom="10dp" />
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#17171D"
-        android:padding="12dp">
+        android:orientation="vertical"
+        android:paddingStart="18dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="12dp">
 
-        <TextView
-            android:id="@+id/txtLogs"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Журнал пуст"
-            android:textColor="#E8E8EA"
-            android:textSize="13sp"
-            android:fontFamily="monospace" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    </ScrollView>
+            <ImageButton
+                android:id="@+id/btnBackLogs"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_guard_button_secondary"
+                android:backgroundTint="@null"
+                android:contentDescription="Назад"
+                android:padding="10dp"
+                android:src="@drawable/ic_guard_back" />
 
-    <Button
-        android:id="@+id/btnCopyLogs"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="Журнал событий"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_guard_panel"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="История защитных событий"
+                android:textColor="@color/guard_red_light"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="14dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/txtLogs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="5dp"
+                    android:textColor="@color/guard_text_primary"
+                    android:textIsSelectable="true"
+                    android:textSize="15sp" />
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Скопировать журнал"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2A2A33"
-        android:layout_marginTop="12dp" />
+        android:layout_height="74dp"
+        android:background="@drawable/bg_guard_panel"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="8dp">
 
-    <Button
-        android:id="@+id/btnClearLogsScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Очистить журнал"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#B63A3A"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Главная"
+            android:textColor="@color/guard_text_secondary"
+            android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/btnBackLog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Назад"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2A2A33"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/navDevices"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Устройства"
+            android:textColor="@color/guard_text_secondary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/navJournal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Журнал"
+            android:textColor="@color/guard_red_light"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>

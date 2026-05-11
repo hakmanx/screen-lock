@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0B0B0F"
+    android:background="@drawable/bg_guard_screen"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,7 +11,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="18dp">
+        android:paddingStart="18dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,35 +26,35 @@
                 android:id="@+id/btnBackDevice"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="#25252D"
+                android:background="@drawable/bg_guard_button_secondary"
+                android:backgroundTint="@null"
                 android:contentDescription="Назад"
                 android:padding="10dp"
-                android:src="@android:drawable/ic_media_previous" />
+                android:src="@drawable/ic_guard_back" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:text="Доверенные устройства"
-                android:textColor="#FFFFFF"
+                android:text="Доверенное устройство"
+                android:textColor="@color/guard_text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:background="#17171D"
+            android:background="@drawable/bg_guard_panel"
             android:orientation="vertical"
             android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Сейчас выбрано"
-                android:textColor="#B8B8C0"
+                android:text="Текущее доверенное устройство"
+                android:textColor="@color/guard_text_secondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -58,11 +62,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Нет выбранных устройств"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:text="Нет выбранного устройства"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="24sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -70,16 +73,16 @@
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:layout_weight="1"
-            android:background="#17171D"
+            android:background="@drawable/bg_guard_panel"
             android:orientation="vertical"
             android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Нажмите на несколько устройств из списка"
-                android:textColor="#FFFFFF"
-                android:textSize="17sp"
+                android:text="Доступные устройства"
+                android:textColor="@color/guard_text_primary"
+                android:textSize="19sp"
                 android:textStyle="bold" />
 
             <ListView
@@ -89,21 +92,22 @@
                 android:layout_marginTop="14dp"
                 android:layout_weight="1"
                 android:cacheColorHint="@android:color/transparent"
-                android:divider="#303038"
+                android:divider="@color/guard_divider"
                 android:dividerHeight="1dp"
                 android:listSelector="@android:color/transparent" />
-
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="74dp"
-        android:background="#17171D"
+        android:background="@drawable/bg_guard_panel"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/navHome"
@@ -112,7 +116,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Главная"
-            android:textColor="#B8B8C0"
+            android:textColor="@color/guard_text_secondary"
             android:textSize="15sp" />
 
         <TextView
@@ -122,7 +126,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Устройства"
-            android:textColor="#FF5A5A"
+            android:textColor="@color/guard_red_light"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -133,9 +137,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Журнал"
-            android:textColor="#B8B8C0"
+            android:textColor="@color/guard_text_secondary"
             android:textSize="15sp" />
-
     </LinearLayout>
 
 </LinearLayout>
