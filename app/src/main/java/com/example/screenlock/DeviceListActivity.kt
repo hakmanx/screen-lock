@@ -94,7 +94,7 @@ class DeviceListActivity : AppCompatActivity() {
                 Toast.makeText(this, "Убрано из доверенных", Toast.LENGTH_SHORT).show()
             } else {
                 selectedMacs.add(mac)
-                namesByMac[mac] = TrustedDevices.safeName(device).ifBlank { mac }
+                namesByMac[mac] = TrustedDevices.safeName(device)
                 LogStore.append(this, "Устройство добавлено в доверенные: $title")
                 Toast.makeText(this, "Добавлено в доверенные", Toast.LENGTH_SHORT).show()
             }

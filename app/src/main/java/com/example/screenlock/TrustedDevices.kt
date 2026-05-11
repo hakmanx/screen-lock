@@ -87,7 +87,7 @@ object TrustedDevices {
 
         return macs.joinToString("\n") { mac ->
             val name = names[mac]?.trim().orEmpty()
-            if (name.isNotEmpty()) "$name\n$mac" else mac
+            if (name.isNotEmpty() && name != mac) name else mac
         }
     }
 
@@ -96,7 +96,6 @@ object TrustedDevices {
         val mac = safeAddress(device).orEmpty()
 
         return when {
-            name.isNotEmpty() && mac.isNotEmpty() -> "$name\n$mac"
             name.isNotEmpty() -> name
             mac.isNotEmpty() -> mac
             else -> "Bluetooth-устройство"
